@@ -1,0 +1,23 @@
+const {DataTypes} = require('sequelize');
+const db = require('../db');
+
+const Comment = db.define('comment', {
+    userName: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    comment: {
+        type: DataTypes.STRING(255),
+        allNull: false,
+    },
+    user_ID: {
+        type: DataTypes.NUMBER,
+        allowNull: false,
+    },
+    game_ID: {
+        type: DataTypes.NUMBER,
+        allowNull: false,
+    }
+})
+
+module.exports = Comment;
