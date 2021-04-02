@@ -1,7 +1,9 @@
-const commentController = require("./commentController");
 const UserController = require("./userController");
+const GameController = require('./myGamesController');
+const CommentController = require("./commentController");
 
 module.exports = {
-    commentController,
-    UserController
+    UserController,
+    GameController,
+    CommentController,
 };

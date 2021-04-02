@@ -2,6 +2,12 @@ const {DataTypes} = require('sequelize');
 const db = require('../db');
 
 const Games = db.define('games', {
+    id: {
+        type: DataTypes.UUID,
+        primaryKey: true,
+        defaultValue: DataTypes.UUIDV4,
+        allowNull: false,
+    },
     title: {
         type: DataTypes.STRING,
         allowNull: false
@@ -15,7 +21,7 @@ const Games = db.define('games', {
         allowNull: false
     },
     description: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.STRING,
         allowNull: false
     },
     image_url: {
@@ -27,11 +33,11 @@ const Games = db.define('games', {
         allowNull: false
     },
     rating: {
-        type: DataTypes.NUMBER,
+        type: DataTypes.INTEGER,
         allowNull: false
     },
     favorite: {
-        type: DataTypes.NUMBER,
+        type: DataTypes.BOOLEAN,
         allowNull: false
     }
 })
