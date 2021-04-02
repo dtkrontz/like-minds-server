@@ -11,20 +11,16 @@ router.post("/register", async (req, res) => {
     try {
         // console.log(username, password, bcrypt.hashSync(password, 15));
         
-        await models.UserModel.create({
+        const user = await models.UserModel.create({
             username: username,
             password: bcrypt.hashSync(password, 15)
         })
-        .then(
-            user => {
-                let token = jwt.sign({id: User.id}, process.env.JWT_SECRET, {expiresIn: 60 * 60 * 24});
-                res.status(201).json({
-                    user: user,
-                    message: "User successfully registered",
-                    sessionToken: `Bearer ${token}`
-                });
-            }
-        )
+            let token = jwt.sign({id: User.id}, process.env.JWT_SECRET, {expiresIn: 60 * 60 * 24});
+            res.status(201).json({
+                user: user,
+                message: "User successfully registered",
+                sessionToken: `Bearer ${token}`
+            });
         // console.log(jwt.sign({id: User.id}, process.env.JWT_SECRET,{expiresIn: 60 * 60 * 24}));
     } catch (err) {
         console.log (err);
@@ -42,46 +38,46 @@ router.post("/register", async (req, res) => {
 
 // LOG IN WITH AN EXISTING USER
 
-// router.post("/login", async (req, res) => {
-//     let {username, password} = req.body.user;
+router.post("/login", async (req, res) => {
+    let {username, password} = req.body.user;
 
-//     try {
-//         let loginUser = await models.UserModel.findOne({
-//             where: {
-//                 username: username,
-//             },
-//         });
-//         if (loginUser) {
+    try {
+        let loginUser = await models.UserModel.findOne({
+            where: {
+                username: username,
+            },
+        });
+        if (loginUser) {
 
-//             let passwordComparison = await bcrypt.compare(password, loginUser.password);
+            let passwordComparison = await bcrypt.compare(password, loginUser.password);
 
-//             if (passwordComparison) {
+            if (passwordComparison) {
 
-//             let token = jwt.sign({id: loginUser.id}, process.env.JWT_SECRET, {expiresIn: 60 * 60 * 24});
+            let token = jwt.sign({id: loginUser.id}, process.env.JWT_SECRET, {expiresIn: 60 * 60 * 24});
 
-//             res.status(200).json({
-//                 user: loginUser,
-//                 message: "User successfully logged in!",
-//                 sessionToken: `Bearer ${token}`
-//             });
-//         } else {
-//             res.status(401).json({
-//                 message: "Incorrect username or password"
-//             })
-//         }
+            res.status(200).json({
+                user: loginUser,
+                message: "User successfully logged in!",
+                sessionToken: `Bearer ${token}`
+            });
+        } else {
+            res.status(401).json({
+                message: "Incorrect username or password"
+            })
+        }
         
-//         } else {
-//             res.status(401).json({
-//                 message: "Incorrect username or password"
-//             });
-//         }
-//     } catch (error) {
-//         console.log(error);
-//         res.status(500).json({
-//             message: "Failed to log user in"
-//         })
-//     }
-// });
+        } else {
+            res.status(401).json({
+                message: "Incorrect username or password"
+            });
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            message: "Failed to log user in"
+        })
+    }
+});
 
 
 module.exports = router;

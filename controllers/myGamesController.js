@@ -74,28 +74,37 @@ router.post('/', validateJWT, async (req, res) => {
 
 router.put('/:id', validateJWT, async (req, res) => {
     const {title, genre, system, description, image_url, review, rating, favorite} = req.body.games;
-
-    const userGame = await models.GamesModel.findOne({
-        where: {
-            userId: req.user.id,
-            id: req.params.id
-        }
-    });
-
-    const updatedGame = {
-        title: title,
-        genre: genre,
-        system: system,
-        description: description,
-        image_url: image_url,
-        review: review,
-        rating: rating,
-        favorite: favorite,
-    };
-
+    
     try {
-        const update = await models.GamesModel.update(updatedGame, userGame);
-        res.status(200).json({message: 'Log Entry Updated'});
+        
+        const userGame = {
+            where: {
+                userId: req.user.id,
+                id: req.params.id
+            }
+        }
+    
+        const updatedGame = {
+            title: title,
+            genre: genre,
+            system: system,
+            description: description,
+            image_url: image_url,
+            review: review,
+            rating: rating,
+            favorite: favorite,
+        };
+
+        const gamesUpdated = await models.GamesModel.update(updatedGame, userGame);
+
+        // const gamesUpdated = await models.GamesModel.update(
+        //     {title, genre, system, description, image_url, review, rating, favorite},
+        //     {where: {
+        //         userId: req.user.id,
+        //         id: req.params.id
+        //     }}
+        // );
+        res.status(200).json({message: 'Game Updated', gamesUpdated});
     } catch (err) {
         console.log(err);
         res.status(500).json({error: err});

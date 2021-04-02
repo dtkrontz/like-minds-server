@@ -21,12 +21,12 @@ router.get('/', validateJWT, async (req, res) => {
 
 // Get all comments per game ID
 
-router.get('/', validateJWT, async (req, res) => {
-
+router.get('/:id', validateJWT, async (req, res) => {
+    
     try {
-        const userComments = await models.CommentModel.findAll({
+        const userComments = await models.CommentsModel.findAll({
             where: {
-                gameId: req.game.id
+                gameId: req.params.id
             }
         });
         res.status(200).json(userComments);
@@ -39,18 +39,18 @@ router.get('/', validateJWT, async (req, res) => {
 // Post comment to specific game
 
 router.post('/comment', validateJWT, async (req, res) => {
-    const {content, GameId} = req.body.comment;
+    const {content, gameId} = req.body.comment;
 
     try {
-        await models.CommentModel.create({
+        await models.CommentsModel.create({
             content: content,
-            GameId: GameId,
+            gameId: gameId,
             userId: req.user.id
         })
         .then(
-            content => {
+            comment => {
                 res.status(201).json({
-                    content: content,
+                    comment: comment,
                     message: 'successfully added comment'
                 });
             }
@@ -66,21 +66,22 @@ router.post('/comment', validateJWT, async (req, res) => {
 // Put - update comment
 
 router.put('/:id', validateJWT, async (req, res) => {
-    const {content} = req.body.content;
+    const {content} = req.body.comment;
 
-    const userContent = await models.CommentModel.findOne({
+    const userContent = {
         where: {
-            userID: req.user.id,
+            userId: req.user.id,
             id: req.params.id,
         }
-    });
+    };
 
     const updatedContent = {
         content: content
     };
 
     try {
-        const update = await models.CommentModel.update(updatedContent, userContent);
+        const commentUpdated = await models.CommentsModel.update(updatedContent, userContent);
+        res.status(200).json({message: 'Comment Updated', commentUpdated})
     } catch (err) {
         console.log(err);
         res.status(500).json({error: err})
@@ -99,8 +100,8 @@ router.delete('/:id', validateJWT, async (req, res) => {
             }
         };
 
-        await models.CommentModel.destroy(deleteComment);
-        res.status(200).json({message: 'Comment Deleted'})
+        await models.CommentsModel.destroy(deleteComment);
+        res.status(200).json({message: 'Comment removed'})
     } catch (err) {
         console.log(err);
         res.status(500).json({error: err});
