@@ -11,6 +11,7 @@ UserModel.hasMany(CommentsModel);
 GamesModel.belongsTo(UserModel);
 GamesModel.hasMany(CommentsModel);
 
+CommentsModel.belongsTo(UserModel);
 CommentsModel.belongsTo(GamesModel);
 
 module.exports = {
