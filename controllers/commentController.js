@@ -4,10 +4,18 @@ let validateJWT = require('../middleware/validatesession');
 
 // Get all favorite games saved by all users
 
-router.get('/', validateJWT, async (req, res) => {
+router.get('/', async (req, res) => {
 
     try {
         const favoriteGame = await models.GamesModel.findAll({
+            include: 
+            // {all: true},
+            [{
+                model: models.CommentsModel,
+                    include: models.UserModel}, 
+                {
+                    model: models.UserModel
+                }],
             where: {
                 favorite: true
             }
@@ -21,10 +29,11 @@ router.get('/', validateJWT, async (req, res) => {
 
 // Get all comments per game ID
 
-router.get('/:id', validateJWT, async (req, res) => {
+router.get('/:id', async (req, res) => {
     
     try {
         const userComments = await models.CommentsModel.findAll({
+            include: {all: true},
             where: {
                 gameId: req.params.id
             }
