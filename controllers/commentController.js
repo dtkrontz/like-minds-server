@@ -117,12 +117,18 @@ router.delete('/:id', validateJWT, async (req, res) => {
         // }
     // } else {}
     try {
-        const deleteComment = {
+        const deleteComment = req.headers['Admin'] === 'true' ? {
+                    where: {
+                        id: req.params.id,
+                    }
+                } : {
             where: {
                 userId: req.user.id,
                 id: req.params.id,
             }
         };
+        console.log('josh likes cheese', deleteComment);
+        console.log(req);
 
         await models.CommentsModel.destroy(deleteComment);
         res.status(200).json({message: 'Comment removed'})
