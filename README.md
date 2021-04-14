@@ -8,7 +8,8 @@ This appliation will have the ability to create and store a session token on sig
 
 This application has 2 types of users, Normal and Admin. Admins will have access rights that will allow them to delete any comment/comments that may be offensive. Normal users will only be able to edit/delete games/comments associated with their account.
 
-There are 2 full CRUD tables (games and comments) where users will be able to create a game/comment, edit and delete a specific game/comment. 
+There are 2 full CRUD tables (games and comments). Users will be able to create a game/comment, edit and delete a specific game/comment associated with their account.
+
 The Data Associations are as follows:
 User has many games and comments,
 Game belongs to User and has many comments,
